@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - City Hardware</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #f97316;
+            --orange-hover: #ea580c;
+            --orange-light: #fdba74;
+            --dark: #1a1a1a;
+            --darker: #111111;
+            --text: #111827;
+            --muted: #6b7280;
+            --light: #9ca3af;
+            --bg-cream: #f5f3ef;
+            --bg-light: #e8e6e1;
+            --white: #ffffff;
+            --border: #d1d5db;
+            --error: #dc2626;
+            --error-bg: #fef2f2;
+            --success: #16a34a;
+            --success-bg: #d1fae5;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--orange);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.1; }
+            90% { opacity: 0.1; }
+            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Logo */
+        .logo-container {
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            animation: fadeInDown 0.6s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--dark);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--orange);
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .logo-container:hover .logo-icon::before {
+            transform: scale(1);
+        }
+
+        .logo-container:hover .logo-icon {
+            transform: scale(1.05) rotate(-5deg);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--dark);
+            letter-spacing: -1px;
+        }
+
+        .logo-text span {
+            color: var(--orange);
+        }
+
+        /* Card */
+        .card {
+            background: var(--white);
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .card-header {
+            margin-bottom: 2rem;
+        }
+
+        .welcome-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--orange);
+            animation: blink 1s infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .card-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .card-subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .card-subtitle a {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .card-subtitle a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s ease;
+        }
+
+        .card-subtitle a:hover {
+            color: var(--orange-hover);
+        }
+
+        .card-subtitle a:hover::after {
+            width: 100%;
+        }
+
+        /* Dynamic Login Attempts Counter */
+        .attempts-counter {
+            background: var(--error-bg);
+            color: var(--error);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            animation: shake 0.4s ease;
+        }
+
+        .attempts-counter.show {
+            display: flex;
+        }
+
+        .attempts-counter.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .attempts-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(220, 38, 38, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .attempts-bar-fill {
+            height: 100%;
+            background: var(--error);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .form-group:focus-within .form-label {
+            color: var(--orange);
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .forgot-link {
+            font-size: 0.85rem;
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .forgot-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--orange);
+            transition: width 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--orange-hover);
+        }
+
+        .forgot-link:hover::after {
+            width: 100%;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: var(--text);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--light);
+            transition: color 0.3s ease;
+        }
+
+        .form-input:focus {
+            background: var(--white);
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+        }
+
+        .form-input:focus::placeholder {
+            color: var(--muted);
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+            background: var(--error-bg);
+            animation: shake 0.4s ease;
+        }
+
+        .form-input.success {
+            border-color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .form-input.loading {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' stroke='%23f97316' stroke-width='3' fill='none' stroke-dasharray='31.4 31.4' transform='rotate(0 12 12)'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Dynamic Character Counter */
+        .char-counter {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: var(--light);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .char-counter.warning {
+            color: var(--warning);
+        }
+
+        .char-counter.danger {
+            color: var(--error);
+            animation: pulse 0.5s ease;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--light);
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: var(--text);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Dynamic Password Visibility Meter */
+        .password-peek {
+            position: absolute;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: var(--light);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .password-peek.show {
+            opacity: 1;
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.35rem;
+            font-weight: 500;
+            animation: slideDown 0.3s ease;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dynamic Login History */
+        .login-history {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: none;
+        }
+
+        .login-history.show {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .history-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .history-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-light);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .history-status {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-weight: 600;
+        }
+
+        .history-status.success { color: var(--success); }
+        .history-status.failed { color: var(--error); }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1.25rem 0;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked {
+            background: var(--orange);
+            border-color: var(--orange);
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:focus {
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 500;
+            user-select: none;
+            transition: color 0.3s ease;
+        }
+
+        .checkbox-wrapper:hover .checkbox-label {
+            color: var(--text);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--dark);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .submit-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .submit-btn:hover {
+            background: #000;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .submit-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        .submit-btn.loading {
+            color: transparent;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Dynamic Progress Ring */
+        .progress-ring {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            display: none;
+        }
+
+        .progress-ring.show {
+            display: block;
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 3;
+        }
+
+        .progress-ring .bg {
+            stroke: var(--border);
+        }
+
+        .progress-ring .fill {
+            stroke: var(--orange);
+            stroke-dasharray: 63;
+            stroke-dashoffset: 63;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        /* Footer */
+        .card-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .card-footer a {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .card-footer a:hover {
+            color: var(--orange-hover);
+            text-decoration: underline;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transform: translateX(150%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success { background: var(--success); color: white; }
+        .toast.error { background: var(--error); color: white; }
+        .toast.warning { background: var(--warning); color: white; }
+
+        /* Dynamic Session Timer */
+        .session-timer {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            background: var(--dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .session-timer.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .session-timer.warning {
+            background: var(--warning);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+            50% { transform: translateX(-50%) translateY(0) scale(1.05); }
+        }
+
+        /* Help Button */
+        .help-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            background: var(--dark);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            font-size: 1.25rem;
+            font-weight: 700;
+            z-index: 100;
+        }
+
+        .help-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            background: var(--orange);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+        }
+
+        /* Dynamic Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--dark);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            transform: translateY(10px);
+            z-index: 10;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid var(--dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.75rem;
+            }
+            .card-title {
+                font-size: 1.75rem;
+            }
+            .help-btn {
+                bottom: 1rem;
+                right: 1rem;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            .session-timer {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-cream);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--orange);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Session Timer -->
+    <div class="session-timer" id="sessionTimer">
+        <span>⏱</span>
+        <span id="timerText">Session: 05:00</span>
+    </div>
+
+    <!-- Logo -->
+    <div class="logo-container">
+        <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+            </svg>
+        </div>
+        <span class="logo-text">CITY<span>HW</span></span>
+    </div>
+
+    <!-- Sign In Card -->
+    <div class="card">
+        <div class="card-header">
+            <div class="welcome-label">
+                Welcome Back
+                <span class="typing-cursor"></span>
+            </div>
+            <h1 class="card-title">Sign In</h1>
+            <p class="card-subtitle">
+                No account? <a href="#">Create one free</a>
+            </p>
+        </div>
+
+        <!-- Dynamic Attempts Counter -->
+        <div class="attempts-counter" id="attemptsCounter">
+            <span>⚠️</span>
+            <span id="attemptsText">3 attempts remaining</span>
+            <div class="attempts-bar">
+                <div class="attempts-bar-fill" id="attemptsBar" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <form id="signinForm" novalidate>
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        placeholder="alex@example.com"
+                        autocomplete="email"
+                        maxlength="100"
+                    >
+                    <!-- Dynamic Character Counter -->
+                    <span class="char-counter" id="emailCounter">0/100</span>
+                    <!-- Progress Ring -->
+                    <svg class="progress-ring" id="emailProgress" viewBox="0 0 24 24">
+                        <circle class="bg" cx="12" cy="12" r="10"/>
+                        <circle class="fill" id="emailProgressFill" cx="12" cy="12" r="10"/>
+                    </svg>
+                </div>
+                <div class="error-message" id="emailError">
+                    Please enter a valid email address
+                </div>
+                <!-- Dynamic Tooltip -->
+                <div class="tooltip" id="emailTooltip">Enter your registered email</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <div class="label-row">
+                    <label class="form-label" for="password">Password</label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        maxlength="50"
+                    >
+                    <!-- Dynamic Password Peek -->
+                    <span class="password-peek" id="passwordPeek"></span>
+                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">👁</button>
+                    <!-- Dynamic Character Counter -->
+                    <span class="char-counter" id="passwordCounter">0/50</span>
+                </div>
+                <div class="error-message" id="passwordError">
+                    Password must be at least 6 characters
+                </div>
+                <!-- Dynamic Tooltip -->
+                <div class="tooltip" id="passwordTooltip">Min 6 characters required</div>
+            </div>
+
+            <!-- Remember Me -->
+            <label class="checkbox-wrapper" id="rememberWrapper">
+                <input type="checkbox" id="rememberMe">
+                <span class="checkbox-label">Keep me signed in</span>
+            </label>
+
+            <!-- Submit -->
+            <button type="submit" class="submit-btn" id="submitBtn">
+                SIGN IN
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+            </button>
+        </form>
+
+        <!-- Dynamic Login History -->
+        <div class="login-history" id="loginHistory">
+            <div class="history-title">
+                <span>📋</span>
+                Recent Login Attempts
+            </div>
+            <ul class="history-list" id="historyList"></ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer">
+            By signing in you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Help Button -->
+    <button class="help-btn" id="helpBtn" aria-label="Help">?</button>
+
+    <script>
+        /**
+         * DYNAMIC USER INPUT HANDLER
+         * Integrated into Login System
+         */
+        class DynamicLoginHandler {
+            constructor() {
+                this.maxAttempts = 5;
+                this.attempts = 0;
+                this.loginHistory = [];
+                this.sessionTime = 300; // 5 minutes in seconds
+                this.sessionInterval = null;
+                
+                this.init();
+            }
+
+            init() {
+                this.cacheElements();
+                this.setupEventListeners();
+                this.createParticles();
+                this.startSessionTimer();
+                this.loadSavedCredentials();
+            }
+
+            cacheElements() {
+                this.form = document.getElementById('signinForm');
+                this.email = document.getElementById('email');
+                this.password = document.getElementById('password');
+                this.togglePassword = document.getElementById('togglePassword');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.toast = document.getElementById('toast');
+                this.attemptsCounter = document.getElementById('attemptsCounter');
+                this.attemptsText = document.getElementById('attemptsText');
+                this.attemptsBar = document.getElementById('attemptsBar');
+                this.historySection = document.getElementById('loginHistory');
+                this.historyList = document.getElementById('historyList');
+                this.sessionTimer = document.getElementById('sessionTimer');
+                this.timerText = document.getElementById('timerText');
+            }
+
+            setupEventListeners() {
+                // Real-time email validation with debounce
+                let emailTimeout;
+                this.email.addEventListener('input', (e) => {
+                    this.updateCharCounter(this.email, 'emailCounter', 100);
+                    this.updateProgressRing(this.email.value.length, 100);
+                    
+                    clearTimeout(emailTimeout);
+                    emailTimeout = setTimeout(() => {
+                        this.validateEmailRealtime(this.email.value);
+                    }, 300);
+                });
+
+                this.email.addEventListener('focus', () => {
+                    this.showTooltip('emailTooltip', this.email);
+                });
+
+                this.email.addEventListener('blur', () => {
+                    this.hideTooltip('emailTooltip');
+                });
+
+                // Real-time password handling
+                this.password.addEventListener('input', (e) => {
+                    this.updateCharCounter(this.password, 'passwordCounter', 50);
+                    this.updatePasswordPeek(this.password.value);
+                    this.validatePasswordRealtime(this.password.value);
+                });
+
+                this.password.addEventListener('focus', () => {
+                    this.showTooltip('passwordTooltip', this.password);
+                });
+
+                this.password.addEventListener('blur', () => {
+                    this.hideTooltip('passwordTooltip');
+                });
+
+                // Password toggle
+                this.togglePassword.addEventListener('click', () => {
+                    this.togglePasswordVisibility();
+                });
+
+                // Form submission
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+                // Remember me
+                document.getElementById('rememberMe').addEventListener('change', (e) => {
+                    this.handleRememberMe(e.target.checked);
+                });
+
+                // Help button
+                document.getElementById('helpBtn').addEventListener('click', () => {
+                    this.showToast('Need help? Contact support@cityhw.com', 'warning');
+                });
+            }
+
+            /**
+             * DYNAMIC PARTICLE SYSTEM
+             */
+            createParticles() {
+                const container = document.getElementById('particles');
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 15 + 's';
+                    particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                    particle.style.width = (4 + Math.random() * 8) + 'px';
+                    particle.style.height = particle.style.width;
+                    container.appendChild(particle);
+                }
+            }
+
+            /**
+             * DYNAMIC CHARACTER COUNTER
+             */
+            updateCharCounter(input, counterId, max) {
+                const counter = document.getElementById(counterId);
+                const length = input.value.length;
+                counter.textContent = `${length}/${max}`;
+                
+                // Dynamic color based on usage
+                counter.classList.remove('warning', 'danger');
+                if (length > max * 0.9) {
+                    counter.classList.add('danger');
+                } else if (length > max * 0.7) {
+                    counter.classList.add('warning');
+                }
+            }
+
+            /**
+             * DYNAMIC PROGRESS RING
+             */
+            updateProgressRing(value, max) {
+                const ring = document.getElementById('emailProgress');
+                const fill = document.getElementById('emailProgressFill');
+                const percentage = Math.min(value / max, 1);
+                const circumference = 2 * Math.PI * 10;
+                const offset = circumference - (percentage * circumference);
+                
+                if (value > 0) {
+                    ring.classList.add('show');
+                    fill.style.strokeDashoffset = offset;
+                } else {
+                    ring.classList.remove('show');
+                }
+            }
+
+            /**
+             * DYNAMIC PASSWORD PEEK (shows last character briefly)
+             */
+            updatePasswordPeek(password) {
+                const peek = document.getElementById('passwordPeek');
+                if (password.length > 0 && this.password.type === 'password') {
+                    peek.textContent = password.slice(-1);
+                    peek.classList.add('show');
+                    setTimeout(() => peek.classList.remove('show'), 500);
+                }
+            }
+
+            /**
+             * DYNAMIC TOOLTIP
+             */
+            showTooltip(tooltipId, target) {
+                const tooltip = document.getElementById(tooltipId);
+                const rect = target.getBoundingClientRect();
+                tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+                tooltip.style.top = (rect.bottom + 8) + 'px';
+                tooltip.classList.add('show');
+            }
+
+            hideTooltip(tooltipId) {
+                document.getElementById(tooltipId).classList.remove('show');
+            }
+
+            /**
+             * REAL-TIME VALIDATION
+             */
+            validateEmailRealtime(email) {
+                const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                this.email.classList.remove('valid', 'invalid');
+                
+                if (email.length > 0) {
+                    this.email.classList.add(isValid ? 'valid' : 'invalid');
+                }
+                
+                return isValid;
+            }
+
+            validatePasswordRealtime(password) {
+                const isValid = password.length >= 6;
+                this.password.classList.remove('valid', 'invalid');
+                
+                if (password.length > 0) {
+                    this.password.classList.add(isValid ? 'valid' : 'invalid');
+                }
+                
+                return isValid;
+            }
+
+            /**
+             * PASSWORD VISIBILITY TOGGLE
+             */
+            togglePasswordVisibility() {
+                const isPassword = this.password.type === 'password';
+                this.password.type = isPassword ? 'text' : 'password';
+                this.togglePassword.textContent = isPassword ? '🙈' : '👁';
+                
+                // Dynamic feedback
+                this.showToast(isPassword ? 'Password visible' : 'Password hidden', 'success');
+            }
+
+            /**
+             * REMEMBER ME FUNCTIONALITY
+             */
+            handleRememberMe(checked) {
+                if (checked) {
+                    localStorage.setItem('rememberMe', 'true');
+                    this.showToast('Credentials will be remembered', 'success');
+                } else {
+                    localStorage.removeItem('rememberMe');
+                    localStorage.removeItem('savedEmail');
+                    this.showToast('Credentials forgotten', 'warning');
+                }
+            }
+
+            loadSavedCredentials() {
+                if (localStorage.getItem('rememberMe') === 'true') {
+                    const savedEmail = localStorage.getItem('savedEmail');
+                    if (savedEmail) {
+                        this.email.value = savedEmail;
+                        document.getElementById('rememberMe').checked = true;
+                        this.validateEmailRealtime(savedEmail);
+                    }
+                }
+            }
+
+            saveCredentials() {
+                if (localStorage.getItem('rememberMe') === 'true') {
+                    localStorage.setItem('savedEmail', this.email.value);
+                }
+            }
+
+            /**
+             * SESSION TIMER
+             */
+            startSessionTimer() {
+                this.sessionTimer.classList.add('show');
+                
+                this.sessionInterval = setInterval(() => {
+                    this.sessionTime--;
+                    const minutes = Math.floor(this.sessionTime / 60);
+                    const seconds = this.sessionTime % 60;
+                    this.timerText.textContent = `Session: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    
+                    if (this.sessionTime <= 60) {
+                        this.sessionTimer.classList.add('warning');
+                    }
+                    
+                    if (this.sessionTime <= 0) {
+                        clearInterval(this.sessionInterval);
+                        this.showToast('Session expired. Please refresh.', 'error');
+                        this.submitBtn.disabled = true;
+                    }
+                }, 1000);
+            }
+
+            /**
+             * LOGIN HISTORY MANAGEMENT
+             */
+            addToHistory(email, status, message) {
+                const entry = {
+                    email: this.maskEmail(email),
+                    status: status,
+                    time: new Date().toLocaleTimeString(),
+                    timestamp: Date.now()
+                };
+                
+                this.loginHistory.unshift(entry);
+                if (this.loginHistory.length > 5) this.loginHistory.pop();
+                
+                this.renderHistory();
+            }
+
+            maskEmail(email) {
+                const [user, domain] = email.split('@');
+                const maskedUser = user.charAt(0) + '***' + user.charAt(user.length - 1);
+                return `${maskedUser}@${domain}`;
+            }
+
+            renderHistory() {
+                if (this.loginHistory.length === 0) return;
+                
+                this.historySection.classList.add('show');
+                this.historyList.innerHTML = this.loginHistory.map((entry, index) => `
+                    <li class="history-item" style="animation-delay: ${index * 0.1}s">
+                        <span>${entry.time} — ${entry.email}</span>
+                        <span class="history-status ${entry.status}">
+                            ${entry.status === 'success' ? '✓' : '✗'} ${entry.status}
+                        </span>
+                    </li>
+                `).join('');
+            }
+
+            /**
+             * ATTEMPTS MANAGEMENT
+             */
+            updateAttempts() {
+                this.attempts++;
+                const remaining = this.maxAttempts - this.attempts;
+                const percentage = (remaining / this.maxAttempts) * 100;
+                
+                this.attemptsCounter.classList.add('show');
+                this.attemptsText.textContent = `${remaining} attempt${remaining !== 1 ? 's' : ''} remaining`;
+                this.attemptsBar.style.width = percentage + '%';
+                
+                if (remaining <= 2) {
+                    this.attemptsCounter.classList.add('warning');
+                }
+                
+                if (this.attempts >= this.maxAttempts) {
+                    this.submitBtn.disabled = true;
+                    this.showToast('Too many failed attempts. Please try again later.', 'error');
+                    return false;
+                }
+                
+                return true;
+            }
+
+            /**
+             * FORM SUBMISSION
+             */
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                const email = this.email.value.trim();
+                const password = this.password.value;
+                
+                // Validation
+                const emailValid = this.validateEmailRealtime(email);
+                const passwordValid = this.validatePasswordRealtime(password);
+                
+                if (!emailValid || !passwordValid) {
+                    this.showToast('Please fix the errors above', 'error');
+                    if (!emailValid) this.email.focus();
+                    else this.password.focus();
+                    return;
+                }
+                
+                // Check attempts
+                if (this.attempts >= this.maxAttempts) {
+                    this.showToast('Account temporarily locked', 'error');
+                    return;
+                }
+                
+                // Loading state
+                this.submitBtn.classList.add('loading');
+                this.submitBtn.disabled = true;
+                
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Simulate authentication (replace with real API)
+                const isAuthenticated = this.simulateAuth(email, password);
+                
+                this.submitBtn.classList.remove('loading');
+                
+                if (isAuthenticated) {
+                    // Success
+                    this.saveCredentials();
+                    this.addToHistory(email, 'success', 'Login successful');
+                    this.showToast('Welcome back! Redirecting...', 'success');
+                    
+                    // Reset attempts
+                    this.attempts = 0;
+                    this.attemptsCounter.classList.remove('show');
+                    
+                    // Simulate redirect
+                    setTimeout(() => {
+                        console.log('Redirecting to dashboard...');
+                        // window.location.href = 'dashboard.php';
+                    }, 1500);
+                } else {
+                    // Failure
+                    this.addToHistory(email, 'failed', 'Invalid credentials');
+                    this.updateAttempts();
+                    this.showToast('Invalid email or password', 'error');
+                    this.password.value = '';
+                    this.password.classList.remove('valid');
+                    this.password.focus();
+                }
+                
+                this.submitBtn.disabled = false;
+            }
+
+            simulateAuth(email, password) {
+                // Demo credentials check
+                const demoUsers = [
+                    { email: 'alex@example.com', password: 'password123' },
+                    { email: 'maria@example.com', password: 'admin123' }
+                ];
+                
+                return demoUsers.some(u => u.email === email && u.password === password);
+            }
+
+            /**
+             * TOAST NOTIFICATION
+             */
+            showToast(message, type = 'success') {
+                this.toast.textContent = message;
+                this.toast.className = 'toast ' + type;
+                this.toast.classList.add('show');
+                
+                setTimeout(() => {
+                    this.toast.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new DynamicLoginHandler();
+        });
+    </script>
+</body>
+</html>
